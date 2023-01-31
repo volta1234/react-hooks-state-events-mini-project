@@ -1,41 +1,42 @@
-import React, { useState } from "react";
+import React,{useState} from "react";
 
-function NewTaskForm({categories, handleAddTask}) {
-  const[details, setDetails] = useState("")
-  const[category, setCategory] = useState("")
+function NewTaskForm({onTaskFormSubmit,categories}) {
 
-function handleDetails(event) {
-  setDetails(event.target.value)
-}
+  const [newItemFields, setNewItemFields]=useState({
+    text:'',
+    category:'Code'
+  })
 
-function handleCategory(event) {
-  setCategory(event.target.value)
-}
+  function handleFields(e){
+    const{name,value}=e.target
+    setNewItemFields({...newItemFields,[name]:value})
 
-function handleSubmit(event) {
-  event.preventDefault()
-  let newTask = {
-    text: details,
-    category: category
   }
-  handleAddTask(newTask)
-}
+  // console.log(newItemFields)
 
 
   return (
-    <form onSubmit={handleSubmit} className="new-task-form">
+    <form
+    onSubmit={(e)=>{
+      e.preventDefault()
+      onTaskFormSubmit(newItemFields)}}
+    className="new-task-form"
+    >
       <label>
         Details
-        <input onChange={handleDetails} type="text" name="text" value = {details} />
+        <input value={newItemFields.text} onChange={handleFields}  type="text" name="text" />
       </label>
+
       <label>
         Category
-        <select onChange={handleCategory} name="category" value={category}>
-          {categories.map((category) => (
-            <option key={category} >{category}</option>
+        <select value={newItemFields.category} onChange={handleFields} name="category">
+          {/* render <option> elements for each category here */}
+          {categories.map((category,index)=>(
+            <option key={index}>{category}</option>
           ))}
         </select>
       </label>
+
       <input type="submit" value="Add task" />
     </form>
   );
